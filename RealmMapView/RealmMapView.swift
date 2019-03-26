@@ -297,12 +297,13 @@ open class RealmMapView: MKMapView {
             rect = MKMapRectUnion(rect, MKMapRectMake(point.x, point.y, 0, 0))
         }
         
-        var region = MKCoordinateRegionForMapRect(rect)
+        let k = 0.3
+        let width = MKMapRectGetWidth(rect)
+        let height = MKMapRectGetHeight(rect)
+        let newRect = MKMapRectInset(rect, -width * k, -height * k)
+        var region = MKCoordinateRegionForMapRect(newRect)
         
         region = self.regionThatFits(region)
-        
-        region.span.latitudeDelta *= 1.3
-        region.span.longitudeDelta *= 1.3
         
         return region
     }
@@ -395,7 +396,7 @@ extension RealmMapView: MKMapViewDelegate {
     }
     
     public func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
-        self.externalDelegate?.mapViewDidStopLocatingUser?(mapView)
+        self.externalDelegate?.mapViewWillStartLocatingUser?(mapView)
     }
     
     public func mapViewDidStopLocatingUser(_ mapView: MKMapView) {
